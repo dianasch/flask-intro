@@ -13,12 +13,12 @@ AWESOMENESS = [
     'oh-so-not-meh', 'brilliant', 'ducky', 'coolio', 'incredible',
     'wonderful', 'smashing', 'lovely']
 
-
+ 
 @app.route('/')
 def start_here():
     """Home page."""
 
-    return "<!doctype html><html>Hi! This is the home page.</html>"
+    return "<!doctype html><html><a href='/hello'>Hi! This is the home page.</a></html>"
 
 
 @app.route('/hello')
@@ -33,22 +33,41 @@ def say_hello():
       </head>
       <body>
         <h1>Hi There!</h1>
-        <form action="/greet">
-          What's your name? <input type="text" name="person">
-          <input type="submit" value="Submit">
+
+          What's your name? <input type="text" name="person"><br>
+        <form action="/greet" method="POST">
+          <select name="compliment">
+            <option value="awesome">Awesome</option>
+            <option value="terrific">Terrific</option>
+            <option value="fantastic">Fantastic</option>
+            <option value="neato">Neato</option>
+            <option value="fantabulous">Fantabulous</option>
+            <option value="wowza">Wowza</option>
+            <option value="oh-so-not-meh">Oh-so-not-meh</option>
+            <option value="brilliant">Brilliant</option>
+            <option value="ducky">Ducky</option>
+            <option value="coolio">Coolio</option>
+            <option value="incredible">Incredible</option>
+            <option value="wonderful">Wonderful</option>
+            <option value="smashing">Smashing</option>
+            <option value="lovely">Lovely</option>
+          </select><br>
+            <input type="submit" value="Submit">
         </form>
+        
+        <form action="/diss" method="POST"><input type="submit" value="Get Dissed"></form>
+
       </body>
     </html>
     """
 
 
-@app.route('/greet')
+@app.route('/greet', methods=['POST'])
 def greet_person():
     """Get user by name."""
+    player = request.form.get("person")
 
-    player = request.args.get("person")
-
-    compliment = choice(AWESOMENESS)
+    compliment = request.form.get("compliment")
 
     return """
     <!doctype html>
@@ -61,6 +80,25 @@ def greet_person():
       </body>
     </html>
     """.format(player, compliment)
+
+
+@app.route('/diss', methods=['POST'])
+def diss_person():
+    """Diss user."""
+
+    diss = choice(["poopy", "mean", "stinky", "a butthead"])
+
+    return """
+    <!doctype html>
+    <html>
+      <head>
+        <title>A Diss</title>
+      </head>
+      <body>
+       I think you're {}!
+      </body>
+    </html>
+    """.format(diss)
 
 
 if __name__ == '__main__':
